@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "253734675704",
+    "project_id": "mercadinho-do-ze",
+    "storage_bucket": "mercadinho-do-ze.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:253734675704:android:b0125babec28b02c4a470d",
+        "android_client_info": {
+          "package_name": "br.com.androidfirebasesincronismodados"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "253734675704-shpi77hjrgspvealjaqpuq25ajfb6jb4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAj3hZGf8nQB1lDuxggKD6-l3aj5sSbc5k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "253734675704-shpi77hjrgspvealjaqpuq25ajfb6jb4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
