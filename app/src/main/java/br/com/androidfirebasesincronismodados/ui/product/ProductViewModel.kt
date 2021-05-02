@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.*
 import br.com.androidfirebasesincronismodados.TAG
 import br.com.androidfirebasesincronismodados.data.model.MarketList
-import br.com.androidfirebasesincronismodados.data.model.Product
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -18,8 +17,8 @@ class ProductViewModel : ViewModel() {
     val text: LiveData<String> = _text
     private val db: FirebaseFirestore get() = Firebase.firestore
 
-    private val _marketList = MutableLiveData<MarketList?>()
-    val marketListLiveData: LiveData<MarketList?>
+    private val _marketList = MutableLiveData<List<MarketList>>()
+    val marketListLiveData: LiveData<List<MarketList>>
             get() = _marketList;
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
@@ -29,17 +28,19 @@ class ProductViewModel : ViewModel() {
 
     fun fetchProducts(){
         try {
-            db.collection("products")
+            db.collection("market-list")
                 .get()
                 .addOnSuccessListener { result ->
-                    for (document in result){
-                        Log.d("ProductViewModel", "${document.id} => ${document.data}")
-                    }
+                    val obj: MutableList<out MarketList> = result.toObjects(MarketList::class.java)
+                    _marketList.postValue(obj)
+                    Log.d("ProductViewModel -->", "${result.documents.joinToString(", ")}")
                 }
 
+            db.collection("market-list").addSnapshotListener(onMarketCollectionSnapshotListener)
         }catch (e: Exception){
-            _marketList.postValue(null)
+            _marketList.postValue(ArrayList())
         }
+
 
         addProduct()
     }
@@ -55,9 +56,9 @@ class ProductViewModel : ViewModel() {
                 Log.w(TAG, "Error adding document", e)
             }*/
 
-        db.collection("products").addSnapshotListener(onMarketCollectionSnapshotListener)
+        //TODO implementar escuta
+        //db.collection("market-list").addSnapshotListener(onMarketCollectionSnapshotListener)
 
-       // db.collection("products").document("1").addSnapshotListener(onMarketlistSnapshotListener)
 
     }
 
@@ -68,38 +69,9 @@ class ProductViewModel : ViewModel() {
         }
 
         querySnapshot?.let { snap ->
-
-            Log.d(TAG, "# MarketList onMarketCollectionSnapshotListener ---> ${snap.documents.joinToString(", ")}")
-
             val obj: MutableList<out MarketList> = snap.toObjects(MarketList::class.java)
-            Log.d(TAG, "# MarketList onMarketCollectionSnapshotListener ---> ${obj.toString()}")
-        }
-    }
-
-    val onMarketlistSnapshotListener: EventListener<DocumentSnapshot> = EventListener { docSnapshot, e ->
-        if (e != null) {
-            Log.w(TAG, "listen:error", e)
-            return@EventListener
-        }
-        docSnapshot?.let { snap ->
-            val obj: MarketList? = snap.toObject(MarketList::class.java)
-
-            Log.d(TAG,  "# MarketList onPermissionSnapshotListener ---> ${obj.toString()}")
-
-            /**
-             * 1- Verifica se o valor é diferente de NULL
-             * 2- Verifica se o documento foi obtido do servidor do Firebase
-             *
-             * Resultado esperado:
-             * -- Se o valor não for nulo, atualiza os produtos
-             * -- Se o valor for nulo, e caso tenha sido obtido do servidor, quer dizer que a lista está vazia
-             */
-            if (obj != null || !snap.metadata.isFromCache) {
-                _marketList.postValue(obj)
-            } else {
-                _marketList.postValue(null)
-            }
-
+            _marketList.postValue(obj)
+            Log.d(TAG, "# MarketList onMarketCollectionSnapshotListener ---> ${snap.documents.joinToString(", ")}")
         }
     }
 }

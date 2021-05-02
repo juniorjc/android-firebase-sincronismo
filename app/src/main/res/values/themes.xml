@@ -22,4 +22,15 @@
     <style name="Theme.AndroidFirebaseSincronismoDados.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.AndroidFirebaseSincronismoDados.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="Text.Title" parent="@style/TextAppearance.AppCompat">
+        <item name="android:textColor">@color/gray_700</item>
+        <item name="android:textSize">@dimen/text_size_large</item>
+    </style>
+
+    <style name="Text.Subtitle" parent="@style/TextAppearance.AppCompat">
+        <item name="android:textColor">@color/gray_600</item>
+
+        <item name="android:textSize">@dimen/text_size_medium</item>
+    </style>
 </resources>
